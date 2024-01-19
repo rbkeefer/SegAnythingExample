@@ -128,8 +128,12 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+tobiiSAMenv/
+tobiiSAMenv.bak/
 tobbiSAMenv/
 tobbiSAMenv.bak/
+tobbiiSAMenv/
+tobbiiSAMenv.bak/
 
 # Spyder project settings
 .spyderproject
