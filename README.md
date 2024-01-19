@@ -23,7 +23,7 @@ Download the model:
 ```$ mkdir model```    
 ```$ cd model```    
 ```$ curl -O https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth```    
-```$ cd ...```    
+```$ cd ..```    
 
 Run the program     
 ```$ python predictor_example.py```
