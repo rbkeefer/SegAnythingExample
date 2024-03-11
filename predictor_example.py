@@ -19,7 +19,13 @@ def show_points(coords, labels, ax, marker_size=375):
     neg_points = coords[labels==0]
     ax.scatter(pos_points[:, 0], pos_points[:, 1], color='green', marker='*', s=marker_size, edgecolor='white', linewidth=1.25)
     ax.scatter(neg_points[:, 0], neg_points[:, 1], color='red', marker='*', s=marker_size, edgecolor='white', linewidth=1.25)   
-    
+
+def show_box(box, ax):
+    x0, y0 = box[0], box[1]
+    w, h = box[2] - box[0], box[3] - box[1]
+    ax.add_patch(plt.Rectangle((x0, y0), w, h, edgecolor='green', facecolor=(0,0,0,0), lw=2))    
+
+
 image = cv2.imread('images/image_0.png')
 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
@@ -32,9 +38,9 @@ predictor = SamPredictor(sam)
 
 predictor.set_image(image)
 
+# Predict on a single point
 input_point = np.array([[470, 600]])
 input_label = np.array([1])
-
 masks, scores, logits = predictor.predict(
     point_coords=input_point,
     point_labels=input_label,
@@ -60,3 +66,38 @@ for i, (mask, score) in enumerate(zip(masks, scores)):
     plt.title(f"Mask {i+1}, Score: {score:.3f}", fontsize=18)
     plt.axis('off')
     plt.show()  
+
+# Predict on a single box
+input_box = np.array([445, 575, 495, 625])
+masks, _, _ = predictor.predict(
+    point_coords=None,
+    point_labels=None,
+    box=input_box[None, :],
+    multimask_output=False,
+)
+plt.figure(figsize=(10, 10))
+plt.imshow(image)
+show_mask(masks[0], plt.gca())
+show_box(input_box, plt.gca())
+plt.axis('off')
+plt.show()
+
+# Predict on a single box and a single point
+input_box = np.array([445, 575, 495, 625])
+input_point = np.array([[470, 600]])
+
+masks, _, _ = predictor.predict(
+    point_coords=input_point,
+    point_labels=input_label,
+    box=input_box,
+    multimask_output=False,
+)
+
+plt.figure(figsize=(10, 10))
+plt.imshow(image)
+show_mask(masks[0], plt.gca())
+show_box(input_box, plt.gca())
+show_points(input_point, input_label, plt.gca())
+plt.axis('off')
+plt.show()
+
